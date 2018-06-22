@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "main.js",
+  "sourceRoot": "../src/",
+  "sources": [
+    "main.coffee"
+  ],
+  "names": [],
+  "mappings": "AAAA;EAAA;AAAA,MAAA,aAAA,EAAA,GAAA,EAAA,WAAA,EAAA,UAAA,EAAA,IAAA,EAAA,KAAA,EAAA;;EAEA,CAAA,CAAC,GAAD,EAAM,aAAN,CAAA,GAAuB,OAAA,CAAQ,UAAR,CAAvB;;EACA,CAAA,CAAC,WAAD,CAAA,GAAgB,OAAA,CAAQ,kBAAR,CAAhB;;EACA,GAAA,GAAM,OAAA,CAAQ,KAAR;;EACN,IAAA,GAAO,OAAA,CAAQ,MAAR;;EAEP,UAAA,GAAa;;EACb,KAAA,GAAQ,QAAA,CAAA,CAAA;IACN,WAAW,CAAC,wBAAZ,CAAA;IACA,UAAA,GAAa,IAAI,aAAJ,CACX;MAAA,KAAA,EAAO,GAAP;MACA,MAAA,EAAQ;IADR,CADW;IAGb,UAAU,CAAC,EAAX,CAAc,QAAd,EAAwB,QAAA,CAAA,CAAA;aACtB,UAAA,GAAa;IADS,CAAxB;IAEA,UAAU,CAAC,OAAX,CAAmB,GAAG,CAAC,MAAJ,CACjB;MAAA,QAAA,EAAU,IAAI,CAAC,IAAL,CAAU,SAAV,EAAqB,YAArB,CAAV;MACA,QAAA,EAAU,OADV;MAEA,OAAA,EAAS;IAFT,CADiB,CAAnB;IAIA,UAAU,CAAC,YAAX,CAAA;WACA,UAAU,CAAC,WAAW,CAAC,OAAO,CAAC,wBAA/B,CAAwD,QAAA,CAAC,GAAD,EAAM,EAAN,CAAA;MACtD,OAAO,CAAC,GAAR,CAAY,aAAZ,EAA2B,GAAG,CAAC,QAA/B;aACA,EAAA,CAAG,CAAH;IAFsD,CAAxD;EAZM;;EAeR,GAAG,CAAC,EAAJ,CAAO,OAAP,EAAgB,KAAhB;;EACA,GAAG,CAAC,EAAJ,CAAO,mBAAP,EAA4B,QAAA,CAAA,CAAA;WAC1B,OAAO,CAAC,QAAR,KAAoB,QAApB,IAAgC,GAAG,CAAC,IAAJ,CAAA;EADN,CAA5B;;EAEA,GAAG,CAAC,EAAJ,CAAO,WAAP,EAAoB,QAAA,CAAA,CAAA;WAClB,UAAA,IAAc,KAAA,CAAA;EADI,CAApB;AA1BA",
+  "sourcesContent": [
+    "'use strict'\r\n\r\n{app, BrowserWindow} = require 'electron'\r\n{autoUpdater} = require 'electron-updater'\r\nurl = require 'url'\r\npath = require 'path'\r\n\r\nmainWindow = null\r\nready = ->\r\n  autoUpdater.checkForUpdatesAndNotify()\r\n  mainWindow = new BrowserWindow\r\n    width: 800\r\n    height: 600\r\n  mainWindow.on 'closed', ->\r\n    mainWindow = null\r\n  mainWindow.loadURL url.format\r\n    pathname: path.join __dirname, 'index.html'\r\n    protocol: 'file:'\r\n    slashes: true\r\n  mainWindow.openDevTools()\r\n  mainWindow.webContents.session.setCertificateVerifyProc (req, cb) ->\r\n    console.log 'verify cert', req.hostname\r\n    cb 0\r\napp.on 'ready', ready\r\napp.on 'window-all-closed', ->\r\n  process.platform is 'darwin' or app.quit()\r\napp.on 'activiate', ->\r\n  mainWindow or ready()"
+  ]
+}

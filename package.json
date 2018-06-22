@@ -1,0 +1,37 @@
+{
+  "name": "r-share",
+  "version": "0.0.1",
+  "description": "ndx-framework web app",
+  "main": "app/main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "build --win -p always"
+  },
+  "build": {
+    "appId": "com.ndxbxrme.r-share",
+    "productName": "Screenclipper"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ndxbxrme/r-share"
+  },
+  "author": "ndxbxrme",
+  "license": "MIT",
+  "homepage": "https://github.com/ndxbxrme/r-share",
+  "devDependencies": {
+    "electron": "^2.0.2",
+    "electron-builder": "^20.15.1",
+    "grunt": "^1.0.3",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-coffee": "^2.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-pug": "^1.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "load-grunt-tasks": "^4.0.0"
+  },
+  "dependencies": {
+    "electron-updater": "^2.21.10",
+    "rtc-quickconnect": "^5.8.4"
+  }
+}

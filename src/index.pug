@@ -1,0 +1,15 @@
+html
+  head
+    style(type='text/css').
+      video {
+        filter: url(#myFilter);
+      }
+  body
+    input(type='button', onclick='master()', value='Master')
+    input(type='button', onclick='client()', value='Client')
+    video
+    svg
+      filter#myFilter
+        feColorMatrix(in='SourceGraphic', type='hueRotate', values='180')
+    script(type='text/javascript').
+      require('./renderer.js');

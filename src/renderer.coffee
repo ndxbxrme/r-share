@@ -4,8 +4,8 @@
 quickconnect = require 'rtc-quickconnect'
 
 opts =
-  room: 'ndxbxrme-rshare-123'
-  signaller: 'http://localhost:3000'
+  room: process.env.RSHARE_ROOM or 'ndxbxrme-rshare-123'
+  signaller: process.env.RSHARE_SIGNALLER or 'http://localhost:3000'
 
 window.master = ->
   dc = null
@@ -29,6 +29,8 @@ window.master = ->
       .on 'channel:opened:events', (id, _dc) ->
         dc = _dc
         console.log 'channel open', id
+        dc.onmessage = (evt) ->
+          console.log evt.data
         dc.send 'hiya'
       .on 'call:started', (id, pc, data) ->
         console.log 'talkin to', id
@@ -36,16 +38,14 @@ window.master = ->
       video.srcObject = stream
       video.onloadedmetadata = (e) ->
         video.play()
-      video.onmousemove = (e) ->
-        dc?.send
-          x: e.clientX
-          y: e.clientY
 window.client = ->
+  dc = null
   quickconnect opts.signaller,
     room: opts.room
     plugins: []
   .createDataChannel 'events'
-  .on 'channel:opened:events', (id, dc) ->
+  .on 'channel:opened:events', (id, _dc) ->
+    dc = _dc
     console.log 'chizzannel open'
     dc.onmessage = (evt) ->
       console.log evt.data
@@ -55,3 +55,7 @@ window.client = ->
     video.srcObject = pc.getRemoteStreams()[0]
     video.onloadedmetadata = (e) ->
       video.play()
+    video.onmousemove = (e) ->
+      dc?.send
+        x: e.clientX
+        y: e.clientY

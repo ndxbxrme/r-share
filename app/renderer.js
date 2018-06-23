@@ -40,6 +40,7 @@
           dc = _dc;
           console.log('channel open', id);
           dc.onmessage = function(evt) {
+            console.log('got message', evt, evt.type);
             if (evt.type === 'mousemove') {
               robot.moveMouse(evt.x, evt.y);
               return console.log(evt.data);

@@ -31,10 +31,9 @@ window.master = ->
         dc = _dc
         console.log 'channel open', id
         dc.onmessage = (evt) ->
-          console.log 'got message', evt, evt.type
-          if evt.type is 'mousemove'
-            robot.moveMouse evt.x, evt.y
-            console.log evt.data
+          console.log 'got message', evt.data, evt.data.type
+          if evt.data.type is 'mousemove'
+            robot.moveMouse evt.data.x, evt.data.y
         dc.send 'hiya'
       .on 'call:started', (id, pc, data) ->
         console.log 'talkin to', id

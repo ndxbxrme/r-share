@@ -43,7 +43,7 @@
             var evt;
             evt = JSON.parse(event.data);
             console.log('got message', evt, evt.type);
-            if (evt.data.type === 'mousemove') {
+            if (evt.type === 'mousemove') {
               return robot.moveMouse(evt.x, evt.y);
             }
           };

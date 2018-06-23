@@ -44,6 +44,12 @@ window.master = ->
         video.play()
 window.client = ->
   dc = null
+  mouse =
+    x: null
+    y: null
+  lastMouse =
+    x: null
+    y: null
   quickconnect opts.signaller,
     room: opts.room
     plugins: []
@@ -60,7 +66,15 @@ window.client = ->
     video.onloadedmetadata = (e) ->
       video.play()
     video.onmousemove = (e) ->
-      dc?.send JSON.stringify
-        type: 'mousemove'
-        x: e.clientX
-        y: e.clientY
+      mouse.x: e.clientX
+      mouse.y: e.clientY
+    tick = ->
+      if mouse.x isnt lastMouse.x or mouse.y isnt lastMouse.y
+        lastMouse.x = mouse.x
+        lastMouse.y = mouse.y
+        dc?.send JSON.stringify
+          type: 'mousemove'
+          x: mouse.x
+          y: mouse.y
+      window.requestAnimationFrame tick
+    tick()

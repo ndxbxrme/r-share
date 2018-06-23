@@ -1,7 +1,8 @@
 'use strict'
 
-{desktopCapturer, ipcRenderer} = require 'electron'
+{desktopCapturer} = require 'electron'
 quickconnect = require 'rtc-quickconnect'
+robot = require 'robotjs'
 
 opts =
   room: process.env.RSHARE_ROOM or 'ndxbxrme-rshare-123'
@@ -31,7 +32,7 @@ window.master = ->
         console.log 'channel open', id
         dc.onmessage = (evt) ->
           if evt.type is 'mousemove'
-            ipcRenderer.send evt.type, evt
+            robot.moveMouse evt.x, evt.y
             console.log evt.data
         dc.send 'hiya'
       .on 'call:started', (id, pc, data) ->

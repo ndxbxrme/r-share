@@ -1,14 +1,16 @@
 (function() {
   'use strict';
-  var BrowserWindow, app, autoUpdater, mainWindow, path, ready, url;
+  var BrowserWindow, app, autoUpdater, ipcMain, mainWindow, path, ready, robot, url;
 
-  ({app, BrowserWindow} = require('electron'));
+  ({app, BrowserWindow, ipcMain} = require('electron'));
 
   ({autoUpdater} = require('electron-updater'));
 
   url = require('url');
 
   path = require('path');
+
+  robot = require('robotjs');
 
   mainWindow = null;
 
@@ -27,9 +29,12 @@
       slashes: true
     }));
     mainWindow.openDevTools();
-    return mainWindow.webContents.session.setCertificateVerifyProc(function(req, cb) {
+    mainWindow.webContents.session.setCertificateVerifyProc(function(req, cb) {
       console.log('verify cert', req.hostname);
       return cb(0);
+    });
+    return ipcMain.on('mousemove', function(win, evt) {
+      return robot.moveMouse(evt.x, evt.y);
     });
   };
 

@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  var desktopCapturer, opts, quickconnect, robot;
+  var desktopCapturer, hideControls, opts, quickconnect, robot;
 
   ({desktopCapturer} = require('electron'));
 
@@ -15,20 +15,33 @@
 
   console.log('opts', opts);
 
+  hideControls = function() {
+    return document.querySelector('.controls').style.display = 'none';
+  };
+
   window.master = function() {
     var dc;
+    hideControls();
     dc = null;
     return desktopCapturer.getSources({
       types: ['screen', 'window']
     }, function(err, sources) {
+      var i, len, mysource, source;
       console.log('err', err);
       console.log('sources', sources);
+      mysource = null;
+      for (i = 0, len = sources.length; i < len; i++) {
+        source = sources[i];
+        if (source.name === 'Entire screen') {
+          mysource = source;
+        }
+      }
       return navigator.mediaDevices.getUserMedia({
         audio: false,
         video: {
           mandatory: {
             chromeMediaSource: 'desktop',
-            chromeMediaSourceId: sources[1].id
+            chromeMediaSourceId: mysource.id
           }
         }
       }).then(function(stream) {
@@ -62,6 +75,7 @@
 
   window.client = function() {
     var dc, lastMouse, mouse;
+    hideControls();
     dc = null;
     mouse = {
       x: null,

@@ -2,11 +2,12 @@
 
 {desktopCapturer} = require 'electron'
 quickconnect = require 'rtc-quickconnect'
+robot = require 'robotjs'
 
 opts =
   room: process.env.RSHARE_ROOM or 'ndxbxrme-rshare-123'
   signaller: process.env.RSHARE_SIGNALLER or 'http://localhost:3000'
-
+console.log 'opts', opts
 window.master = ->
   dc = null
   desktopCapturer.getSources 
@@ -30,7 +31,9 @@ window.master = ->
         dc = _dc
         console.log 'channel open', id
         dc.onmessage = (evt) ->
-          console.log evt.data
+          if evt.type is 'mousemove'
+            robot.moveMouse evt.x, evt.y
+            console.log evt.data
         dc.send 'hiya'
       .on 'call:started', (id, pc, data) ->
         console.log 'talkin to', id
@@ -57,5 +60,6 @@ window.client = ->
       video.play()
     video.onmousemove = (e) ->
       dc?.send
+        type: 'mousemove'
         x: e.clientX
         y: e.clientY

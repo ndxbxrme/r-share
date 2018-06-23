@@ -1,6 +1,6 @@
 {
   "name": "r-share",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ndx-framework web app",
   "main": "app/main.js",
   "scripts": {
@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "electron-updater": "^2.21.10",
+    "robotjs": "^0.5.1",
     "rtc-quickconnect": "^5.8.4"
   }
 }

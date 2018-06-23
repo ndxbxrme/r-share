@@ -1,9 +1,10 @@
 'use strict'
 
-{app, BrowserWindow} = require 'electron'
+{app, BrowserWindow, ipcMain} = require 'electron'
 {autoUpdater} = require 'electron-updater'
 url = require 'url'
 path = require 'path'
+robot = require 'robotjs'
 
 mainWindow = null
 ready = ->
@@ -21,6 +22,8 @@ ready = ->
   mainWindow.webContents.session.setCertificateVerifyProc (req, cb) ->
     console.log 'verify cert', req.hostname
     cb 0
+  ipcMain.on 'mousemove', (win, evt) ->
+    robot.moveMouse evt.x, evt.y
 app.on 'ready', ready
 app.on 'window-all-closed', ->
   process.platform is 'darwin' or app.quit()

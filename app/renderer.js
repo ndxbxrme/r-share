@@ -1,10 +1,12 @@
 (function() {
   'use strict';
-  var desktopCapturer, ipcRenderer, opts, quickconnect;
+  var desktopCapturer, opts, quickconnect, robot;
 
-  ({desktopCapturer, ipcRenderer} = require('electron'));
+  ({desktopCapturer} = require('electron'));
 
   quickconnect = require('rtc-quickconnect');
+
+  robot = require('robotjs');
 
   opts = {
     room: process.env.RSHARE_ROOM || 'ndxbxrme-rshare-123',
@@ -39,7 +41,7 @@
           console.log('channel open', id);
           dc.onmessage = function(evt) {
             if (evt.type === 'mousemove') {
-              ipcRenderer.send(evt.type, evt);
+              robot.moveMouse(evt.x, evt.y);
               return console.log(evt.data);
             }
           };

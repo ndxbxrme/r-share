@@ -31,6 +31,7 @@ window.master = ->
         dc = _dc
         console.log 'channel open', id
         dc.onmessage = (evt) ->
+          console.log 'got message', evt, evt.type
           if evt.type is 'mousemove'
             robot.moveMouse evt.x, evt.y
             console.log evt.data

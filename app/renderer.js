@@ -40,12 +40,12 @@
           dc = _dc;
           console.log('channel open', id);
           dc.onmessage = function(evt) {
-            console.log('got message', evt, evt.type);
-            if (evt.type === 'mousemove') {
-              robot.moveMouse(evt.x, evt.y);
-              return console.log(evt.data);
-            }
+            return console.log('got message', evt.data, evt.data.type);
           };
+          /*
+          if evt.data.type is 'mousemove'
+            robot.moveMouse evt.data.x, evt.data.y
+          */
           return dc.send('hiya');
         }).on('call:started', function(id, pc, data) {
           return console.log('talkin to', id);

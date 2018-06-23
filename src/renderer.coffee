@@ -30,10 +30,11 @@ window.master = ->
       .on 'channel:opened:events', (id, _dc) ->
         dc = _dc
         console.log 'channel open', id
-        dc.onmessage = (evt) ->
-          console.log 'got message', evt.data, evt.data.type
+        dc.onmessage = (event) ->
+          evt = JSON.parse event.data
+          console.log 'got message', evt, evt.type
           if evt.data.type is 'mousemove'
-            robot.moveMouse evt.data.x, evt.data.y
+            robot.moveMouse evt.x, evt.y
         dc.send 'hiya'
       .on 'call:started', (id, pc, data) ->
         console.log 'talkin to', id
@@ -59,7 +60,7 @@ window.client = ->
     video.onloadedmetadata = (e) ->
       video.play()
     video.onmousemove = (e) ->
-      dc?.send
+      dc?.send JSON.stringify
         type: 'mousemove'
         x: e.clientX
         y: e.clientY

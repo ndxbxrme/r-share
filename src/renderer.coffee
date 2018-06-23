@@ -33,7 +33,7 @@ window.master = ->
         dc.onmessage = (event) ->
           evt = JSON.parse event.data
           console.log 'got message', evt, evt.type
-          if evt.data.type is 'mousemove'
+          if evt.type is 'mousemove'
             robot.moveMouse evt.x, evt.y
         dc.send 'hiya'
       .on 'call:started', (id, pc, data) ->

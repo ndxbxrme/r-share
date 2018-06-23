@@ -39,13 +39,14 @@
         }).addStream(stream).createDataChannel('events').on('channel:opened:events', function(id, _dc) {
           dc = _dc;
           console.log('channel open', id);
-          dc.onmessage = function(evt) {
-            return console.log('got message', evt.data, evt.data.type);
+          dc.onmessage = function(event) {
+            var evt;
+            evt = JSON.parse(event.data);
+            console.log('got message', evt, evt.type);
+            if (evt.data.type === 'mousemove') {
+              return robot.moveMouse(evt.x, evt.y);
+            }
           };
-          /*
-          if evt.data.type is 'mousemove'
-            robot.moveMouse evt.data.x, evt.data.y
-          */
           return dc.send('hiya');
         }).on('call:started', function(id, pc, data) {
           return console.log('talkin to', id);
@@ -80,11 +81,11 @@
         return video.play();
       };
       return video.onmousemove = function(e) {
-        return dc != null ? dc.send({
+        return dc != null ? dc.send(JSON.stringify({
           type: 'mousemove',
           x: e.clientX,
           y: e.clientY
-        }) : void 0;
+        })) : void 0;
       };
     });
   };

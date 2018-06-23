@@ -61,8 +61,16 @@
   };
 
   window.client = function() {
-    var dc;
+    var dc, lastMouse, mouse;
     dc = null;
+    mouse = {
+      x: null,
+      y: null
+    };
+    lastMouse = {
+      x: null,
+      y: null
+    };
     return quickconnect(opts.signaller, {
       room: opts.room,
       plugins: []
@@ -73,20 +81,32 @@
         return console.log(evt.data);
       };
     }).on('call:started', function(id, pc, data) {
-      var video;
+      var tick, video;
       console.log('hey', id);
       video = document.querySelector('video');
       video.srcObject = pc.getRemoteStreams()[0];
       video.onloadedmetadata = function(e) {
         return video.play();
       };
-      return video.onmousemove = function(e) {
-        return dc != null ? dc.send(JSON.stringify({
-          type: 'mousemove',
-          x: e.clientX,
-          y: e.clientY
-        })) : void 0;
+      video.onmousemove = function(e) {
+        mouse.x = e.clientX;
+        return mouse.y = e.clientY;
       };
+      tick = function() {
+        if (mouse.x !== lastMouse.x || mouse.y !== lastMouse.y) {
+          lastMouse.x = mouse.x;
+          lastMouse.y = mouse.y;
+          if (dc != null) {
+            dc.send(JSON.stringify({
+              type: 'mousemove',
+              x: mouse.x,
+              y: mouse.y
+            }));
+          }
+        }
+        return window.requestAnimationFrame(tick);
+      };
+      return tick();
     });
   };
 

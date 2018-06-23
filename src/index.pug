@@ -1,12 +1,17 @@
 html
   head
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
     style(type='text/css').
       video {
         filter: url(#myFilter);
       }
   body
-    input(type='button', onclick='master()', value='Master')
-    input(type='button', onclick='client()', value='Client')
+    .controls
+      input(type='button', onclick='master()', value='Master')
+      input(type='button', onclick='client()', value='Client')
     video
     svg
       filter#myFilter

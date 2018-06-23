@@ -8,19 +8,26 @@ opts =
   room: process.env.RSHARE_ROOM or 'ndxbxrme-rshare-123'
   signaller: process.env.RSHARE_SIGNALLER or 'http://localhost:3000'
 console.log 'opts', opts
+hideControls = ->
+  document.querySelector('.controls').style.display = 'none'
 window.master = ->
+  hideControls()
   dc = null
   desktopCapturer.getSources 
     types: ['screen', 'window']
   , (err, sources) ->
     console.log 'err', err
     console.log 'sources', sources
+    mysource = null
+    for source in sources
+      if source.name is 'Entire screen'
+        mysource = source
     navigator.mediaDevices.getUserMedia
       audio: false
       video:
         mandatory:
           chromeMediaSource: 'desktop'
-          chromeMediaSourceId: sources[1].id
+          chromeMediaSourceId: mysource.id
     .then (stream) ->
       quickconnect opts.signaller,
         room: opts.room
@@ -43,6 +50,7 @@ window.master = ->
       video.onloadedmetadata = (e) ->
         video.play()
 window.client = ->
+  hideControls()
   dc = null
   mouse =
     x: null

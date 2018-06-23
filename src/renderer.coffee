@@ -66,8 +66,8 @@ window.client = ->
     video.onloadedmetadata = (e) ->
       video.play()
     video.onmousemove = (e) ->
-      mouse.x: e.clientX
-      mouse.y: e.clientY
+      mouse.x = e.clientX
+      mouse.y = e.clientY
     tick = ->
       if mouse.x isnt lastMouse.x or mouse.y isnt lastMouse.y
         lastMouse.x = mouse.x

@@ -40,8 +40,14 @@ window.master = ->
         dc.onmessage = (event) ->
           evt = JSON.parse event.data
           console.log 'got message', evt, evt.type
-          if evt.type is 'mousemove'
-            robot.moveMouse evt.x, evt.y
+          if evt.move
+            robot.moveMouse evt.move.x, evt.move.y
+          if evt.l
+            robot.mouseToggle evt.l, 'left'
+          if evt.r
+            robot.mouseToggle evt.r, 'right'
+          if evt.m
+            robot.mouseToggle evt.m, 'middle'
         dc.send 'hiya'
       .on 'call:started', (id, pc, data) ->
         console.log 'talkin to', id
@@ -55,9 +61,15 @@ window.client = ->
   mouse =
     x: null
     y: null
+    l: null
+    r: null
+    m: null
   lastMouse =
     x: null
     y: null
+    l: null
+    r: null
+    m: null
   quickconnect opts.signaller,
     room: opts.room
     plugins: []
@@ -76,13 +88,38 @@ window.client = ->
     video.onmousemove = (e) ->
       mouse.x = e.clientX
       mouse.y = e.clientY
+    video.onmousedown = (e) ->
+      mouse.l = e.buttons & 1 > 0
+      mouse.r = e.buttons & 2 > 0
+      mouse.m = e.buttons & 4 > 0
+    video.onmouseup = (e) ->
+      mouse.l = e.buttons & 1 > 0
+      mouse.r = e.buttons & 2 > 0
+      mouse.m = e.buttons & 4 > 0
+      
     tick = ->
+      obj = {}
+      send = false
       if mouse.x isnt lastMouse.x or mouse.y isnt lastMouse.y
         lastMouse.x = mouse.x
         lastMouse.y = mouse.y
-        dc?.send JSON.stringify
-          type: 'mousemove'
+        obj.move =
           x: mouse.x
           y: mouse.y
+        send = true
+      if mouse.l isnt lastMouse.l
+        obj.l = if mouse.l then 'down' else 'up'
+        lastMouse.l = mouse.l
+        send = true
+      if mouse.r isnt lastMouse.r
+        obj.r = if mouse.r then 'down' else 'up'
+        lastMouse.r = mouse.r
+        send = true
+      if mouse.m isnt lastMouse.m
+        obj.m = if mouse.m then 'down' else 'up'
+        lastMouse.m = mouse.m
+        send = true
+      if send
+        dc?.send JSON.stringify obj
       window.requestAnimationFrame tick
     tick()
